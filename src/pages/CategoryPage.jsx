@@ -13,9 +13,9 @@ export default function CategoryPage() {
     }).catch(() => {
       // sample fallback tools
       setTools([
-        { name: "Humaniser", description: "Rewrite text to sound natural", url: process.env.REACT_APP_HUMANISER_URL || "#" },
-        { name: "EssayAid", description: "Outline and structure essays", url: "https://example.com" },
-        { name: "RefFinder", description: "Find references and citations", url: "https://example.com" }
+        { name: "Humaniser", description: "Rewrite text to sound natural", url: process.env.REACT_APP_HUMANISER_URL || "https://humaniser-11.vercel.app/" },
+        { name: "EssayAid", description: "Outline and structure essays", url: "https://essayflow.ai/" },
+        { name: "RefFinder", description: "Find references and citations", url: "https://chat.openai.com" }
       ]);
     });
   }, [id]);
