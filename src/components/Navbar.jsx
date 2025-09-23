@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaBars, FaTimes } from "react-icons/fa";
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -25,8 +24,8 @@ export default function Navbar() {
       >
         <div className="flex items-center justify-between px-4 py-4 border-b">
           <h1 className="text-xl font-bold text-indigo-600">Assignment Hub</h1>
-          <button onClick={() => setIsOpen(false)}>
-            <FaTimes size={24} className="text-gray-700" />
+          <button onClick={() => setIsOpen(false)} className="text-gray-700">
+            Close ✖
           </button>
         </div>
 
@@ -39,7 +38,7 @@ export default function Navbar() {
             Categories
           </Link>
           <a
-            href={`${process.env.REACT_APP_HUMANISER_URL || "https://humaniser-11.vercel.app/"}`}
+            href={`${process.env.REACT_APP_HUMANISER_URL || "/"}`}
             target="_blank"
             rel="noopener noreferrer"
             className="text-gray-700 hover:text-indigo-600"
@@ -100,10 +99,10 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Top bar with hamburger */}
+      {/* Top bar with hamburger (text instead of icon) */}
       <div className="w-full bg-white shadow-sm px-4 py-4 flex items-center justify-between">
-        <button onClick={() => setIsOpen(true)}>
-          <FaBars size={24} className="text-gray-700" />
+        <button onClick={() => setIsOpen(true)} className="text-gray-700">
+          Menu ☰
         </button>
         <h1 className="text-lg font-bold text-indigo-600">Assignment Hub</h1>
       </div>
