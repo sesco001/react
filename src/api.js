@@ -1,10 +1,11 @@
 import axios from "axios";
 
-const BASE = process.env.REACT_APP_BACKEND_URL || "";
+const BASE =
+  process.env.REACT_APP_BACKEND_URL || "https://backreact-5.onrender.com/api";
 
 const api = axios.create({
   baseURL: BASE,
-  headers: { "Content-Type": "application/json" }
+  headers: { "Content-Type": "application/json" },
 });
 
 // Attach token if present
