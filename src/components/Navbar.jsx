@@ -38,7 +38,7 @@ export default function Navbar() {
             Categories
           </Link>
           <a
-            href={`${process.env.REACT_APP_HUMANISER_URL || "humaniser-11.vercel.app"}`}
+            href={`${process.env.REACT_APP_HUMANISER_URL || "https://humaniser-11.vercel.app/"}`}
             target="_blank"
             rel="noopener noreferrer"
             className="text-gray-700 hover:text-indigo-600"
