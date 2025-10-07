@@ -8,9 +8,9 @@ import Submit from "./pages/Submit";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Admin from "./pages/Admin";
-import Learn from "./pages/Learn";   // ✅ Added
-import Earn from "./pages/Earn";     // ✅ Added
-import ProtectedRoute from "./components/ProtectedRoute"; // ✅ Protect admin
+import Learn from "./pages/Learn";
+import Earn from "./pages/Earn";
+import AdminRoute from "./components/AdminRoute"; // ✅ Use AdminRoute instead of ProtectedRoute
 
 export default function App() {
   return (
@@ -30,13 +30,13 @@ export default function App() {
           <Route path="/learn" element={<Learn />} />
           <Route path="/earn" element={<Earn />} />
 
-          {/* Admin – only for logged in admins */}
+          {/* Admin – only accessible by admins */}
           <Route
             path="/admin"
             element={
-              <ProtectedRoute role="admin">
+              <AdminRoute>
                 <Admin />
-              </ProtectedRoute>
+              </AdminRoute>
             }
           />
         </Routes>
@@ -44,4 +44,5 @@ export default function App() {
     </div>
   );
 }
+
 
