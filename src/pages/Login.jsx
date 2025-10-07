@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import api from "../api";
 import { useNavigate } from "react-router-dom";
 
@@ -8,16 +8,38 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // If user already logged in, redirect them away from login page
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/"); // change this to "/dashboard" if you have one
+    }
+  }, [navigate]);
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await api.post("/auth/signin", { email, password });
+      const res = await api.post("/auth/signin", {
+        email: email.trim(),
+        password: password.trim(),
+      });
+
+      // Save token + user info
       localStorage.setItem("token", res.data.token);
-      localStorage.setItem("user", JSON.stringify(res.data.user || { email }));
+      localStorage.setItem(
+        "user",
+        JSON.stringify(res.data.user || { email })
+      );
+
+      // Redirect after login
       navigate("/");
     } catch (err) {
-      alert("Login failed");
+      const msg =
+        err.response?.data?.error ||
+        err.response?.data?.message ||
+        "❌ Login failed, please try again.";
+      alert(msg);
     }
     setLoading(false);
   };
@@ -26,10 +48,27 @@ export default function Login() {
     <div className="max-w-md mx-auto bg-white p-6 rounded shadow">
       <h2 className="text-xl font-semibold mb-4">Login</h2>
       <form onSubmit={handleLogin} className="space-y-4">
-        <input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" className="w-full border p-2 rounded" />
-        <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" placeholder="Password" className="w-full border p-2 rounded" />
-        <button type="submit" className="bg-indigo-600 text-white px-4 py-2 rounded" disabled={loading}>
-          {loading ? "Logging in..." : "Login"}
+        <input
+          disabled={loading}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email"
+          className="w-full border p-2 rounded"
+        />
+        <input
+          disabled={loading}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          type="password"
+          placeholder="Password"
+          className="w-full border p-2 rounded"
+        />
+        <button
+          type="submit"
+          className="bg-indigo-600 text-white px-4 py-2 rounded w-full"
+          disabled={loading}
+        >
+          {loading ? "🔑 Logging in..." : "Login"}
         </button>
       </form>
     </div>
