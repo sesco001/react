@@ -24,7 +24,10 @@ export default function Navbar() {
       >
         <div className="flex items-center justify-between px-4 py-4 border-b">
           <h1 className="text-xl font-bold text-indigo-600">Comrades Hub</h1>
-          <button onClick={() => setIsOpen(false)} className="text-gray-700">
+          <button
+            onClick={() => setIsOpen(false)}
+            className="text-gray-700 font-bold text-lg"
+          >
             ✖
           </button>
         </div>
@@ -121,3 +124,20 @@ export default function Navbar() {
                 }}
                 className="text-sm text-red-600 text-left"
               >
+                🔓 Logout
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* Open sidebar button */}
+      <button
+        onClick={() => setIsOpen(true)}
+        className="fixed top-4 left-4 z-50 p-2 bg-indigo-600 text-white rounded shadow-lg"
+      >
+        ☰
+      </button>
+    </div>
+  );
+}
