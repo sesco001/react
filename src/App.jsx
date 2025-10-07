@@ -8,6 +8,8 @@ import Submit from "./pages/Submit";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Admin from "./pages/Admin";
+import Learn from "./pages/Learn";   // ✅ Added
+import Earn from "./pages/Earn";     // ✅ Added
 
 export default function App() {
   return (
@@ -22,8 +24,13 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/admin" element={<Admin />} />
+
+          {/* ✅ New Routes */}
+          <Route path="/learn" element={<Learn />} />
+          <Route path="/earn" element={<Earn />} />
         </Routes>
       </main>
     </div>
   );
 }
+
