@@ -23,35 +23,64 @@ export default function Navbar() {
         }`}
       >
         <div className="flex items-center justify-between px-4 py-4 border-b">
-          <h1 className="text-xl font-bold text-indigo-600">Assignment Hub</h1>
+          <h1 className="text-xl font-bold text-indigo-600">Comrades Hub</h1>
           <button onClick={() => setIsOpen(false)} className="text-gray-700">
-            Close ✖
+            ✖
           </button>
         </div>
 
         <div className="flex flex-col p-4 space-y-4">
           <Link
+            to="/"
+            className="text-gray-700 hover:text-indigo-600"
+            onClick={() => setIsOpen(false)}
+          >
+            🏠 Home
+          </Link>
+
+          <Link
+            to="/learn"
+            className="text-gray-700 hover:text-indigo-600"
+            onClick={() => setIsOpen(false)}
+          >
+            📘 Learn
+          </Link>
+
+          <Link
+            to="/earn"
+            className="text-gray-700 hover:text-indigo-600"
+            onClick={() => setIsOpen(false)}
+          >
+            💼 Earn
+          </Link>
+
+          <Link
             to="/categories"
             className="text-gray-700 hover:text-indigo-600"
             onClick={() => setIsOpen(false)}
           >
-            Categories
+            📂 Categories
           </Link>
+
           <a
-            href={`${process.env.REACT_APP_HUMANISER_URL || "https://humaniser-11.vercel.app/"}`}
+            href={`${
+              process.env.REACT_APP_HUMANISER_URL ||
+              "https://humaniser-11.vercel.app/"
+            }`}
             target="_blank"
             rel="noopener noreferrer"
             className="text-gray-700 hover:text-indigo-600"
             onClick={() => setIsOpen(false)}
           >
-            Humaniser
+            🤖 Humaniser
           </a>
+
           <Link
             to="/submit"
-            className="px-4 py-2 bg-indigo-600 text-white rounded text-center"
+            className="px-4 py-2 bg-indigo-600 text-white rounded text-center hover:bg-indigo-700"
             onClick={() => setIsOpen(false)}
           >
-            Submit Assignment
+            ✍️ Submit Assignment
           </Link>
 
           {!token ? (
@@ -61,20 +90,20 @@ export default function Navbar() {
                 className="text-gray-700"
                 onClick={() => setIsOpen(false)}
               >
-                Log in
+                🔑 Log in
               </Link>
               <Link
                 to="/signup"
                 className="text-gray-700"
                 onClick={() => setIsOpen(false)}
               >
-                Sign up
+                📝 Sign up
               </Link>
             </>
           ) : (
             <>
               <span className="text-gray-700">
-                Hi, {user?.name || user?.email}
+                👋 Hi, {user?.name || user?.email}
               </span>
               {user?.role === "admin" && (
                 <Link
@@ -82,7 +111,7 @@ export default function Navbar() {
                   className="text-gray-700"
                   onClick={() => setIsOpen(false)}
                 >
-                  Admin
+                  ⚙️ Admin
                 </Link>
               )}
               <button
@@ -92,20 +121,3 @@ export default function Navbar() {
                 }}
                 className="text-sm text-red-600 text-left"
               >
-                Logout
-              </button>
-            </>
-          )}
-        </div>
-      </div>
-
-      {/* Top bar with hamburger (text instead of icon) */}
-      <div className="w-full bg-white shadow-sm px-4 py-4 flex items-center justify-between">
-        <button onClick={() => setIsOpen(true)} className="text-gray-700">
-          Menu ☰
-        </button>
-        <h1 className="text-lg font-bold text-indigo-600">Assignment Hub</h1>
-      </div>
-    </div>
-  );
-}
