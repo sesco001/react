@@ -8,11 +8,17 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // If user already logged in, redirect them away from login page
+  // If user already logged in, redirect
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) {
-      navigate("/"); // change this to "/dashboard" if you have one
+    const user = JSON.parse(localStorage.getItem("user") || "null");
+    if (token && user) {
+      // Redirect admin to /admin
+      if (user.role === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
     }
   }, [navigate]);
 
@@ -25,15 +31,21 @@ export default function Login() {
         password: password.trim(),
       });
 
-      // Save token + user info
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem(
-        "user",
-        JSON.stringify(res.data.user || { email })
-      );
+      const user = res.data.user;
+      const token = res.data.token;
 
-      // Redirect after login
-      navigate("/");
+      if (!user || !token) throw new Error("Invalid login response");
+
+      // Save token + full user object (including role)
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+
+      // Redirect based on role
+      if (user.role === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
     } catch (err) {
       const msg =
         err.response?.data?.error ||
