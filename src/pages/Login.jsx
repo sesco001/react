@@ -10,11 +10,13 @@ export default function Login() {
 
   // Redirect if already logged in
   useEffect(() => {
-    const token = localStorage.getItem("token");
     const user = JSON.parse(localStorage.getItem("user") || "null");
-    if (token && user) {
-      if (user.role === "admin") navigate("/admin");
-      else navigate("/");
+    if (user && user.token) {
+      if (user.role === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
     }
   }, [navigate]);
 
@@ -22,23 +24,22 @@ export default function Login() {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await api.post("/auth/signin", {
+      const { data } = await api.post("/auth/signin", {
         email: email.trim(),
         password: password.trim(),
       });
 
-      const user = res.data; // ✅ use res.data directly
-      const token = res.data.token;
+      if (!data || !data.token) throw new Error("Invalid login response");
 
-      if (!user || !token) throw new Error("Invalid login response");
-
-      // Save token + full user object
-      localStorage.setItem("token", token);
-      localStorage.setItem("user", JSON.stringify(user));
+      // Save full user object (including token + role)
+      localStorage.setItem("user", JSON.stringify(data));
 
       // Redirect based on role
-      if (user.role === "admin") navigate("/admin");
-      else navigate("/");
+      if (data.role === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
     } catch (err) {
       const msg =
         err.response?.data?.error ||
@@ -79,4 +80,3 @@ export default function Login() {
     </div>
   );
 }
-
