@@ -10,6 +10,7 @@ import Signup from "./pages/Signup";
 import Admin from "./pages/Admin";
 import Learn from "./pages/Learn";   // ✅ Added
 import Earn from "./pages/Earn";     // ✅ Added
+import ProtectedRoute from "./components/ProtectedRoute"; // ✅ Protect admin
 
 export default function App() {
   return (
@@ -17,17 +18,27 @@ export default function App() {
       <Navbar />
       <main className="container mx-auto px-4 py-8">
         <Routes>
+          {/* Public routes */}
           <Route path="/" element={<Home />} />
           <Route path="/categories" element={<Categories />} />
           <Route path="/category/:id" element={<CategoryPage />} />
           <Route path="/submit" element={<Submit />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/admin" element={<Admin />} />
 
-          {/* ✅ New Routes */}
+          {/* Learning & Earning */}
           <Route path="/learn" element={<Learn />} />
           <Route path="/earn" element={<Earn />} />
+
+          {/* Admin – only for logged in admins */}
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute role="admin">
+                <Admin />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </main>
     </div>
