@@ -8,17 +8,13 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // If user already logged in, redirect
+  // Redirect if already logged in
   useEffect(() => {
     const token = localStorage.getItem("token");
     const user = JSON.parse(localStorage.getItem("user") || "null");
     if (token && user) {
-      // Redirect admin to /admin
-      if (user.role === "admin") {
-        navigate("/admin");
-      } else {
-        navigate("/");
-      }
+      if (user.role === "admin") navigate("/admin");
+      else navigate("/");
     }
   }, [navigate]);
 
@@ -31,21 +27,18 @@ export default function Login() {
         password: password.trim(),
       });
 
-      const user = res.data.user;
+      const user = res.data; // ✅ use res.data directly
       const token = res.data.token;
 
       if (!user || !token) throw new Error("Invalid login response");
 
-      // Save token + full user object (including role)
+      // Save token + full user object
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
 
       // Redirect based on role
-      if (user.role === "admin") {
-        navigate("/admin");
-      } else {
-        navigate("/");
-      }
+      if (user.role === "admin") navigate("/admin");
+      else navigate("/");
     } catch (err) {
       const msg =
         err.response?.data?.error ||
@@ -86,3 +79,4 @@ export default function Login() {
     </div>
   );
 }
+
