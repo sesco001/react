@@ -42,11 +42,39 @@ export default function Admin() {
     try {
       await api.post(`/admin/verify-payment/${userId}`);
       alert("Payment verified ✅");
-      // refresh user list after verify
-      const res = await api.get("/admin/users");
-      setUsers(res.data || []);
+      refreshUsers();
     } catch (err) {
       alert("Failed to verify payment ❌");
+    }
+  };
+
+  const handleSuspendUser = async (userId) => {
+    try {
+      await api.post(`/admin/suspend-user/${userId}`);
+      alert("User suspended ✅");
+      refreshUsers();
+    } catch (err) {
+      alert("Failed to suspend user ❌");
+    }
+  };
+
+  const handleDeleteUser = async (userId) => {
+    if (!window.confirm("Are you sure you want to delete this user? ❌")) return;
+    try {
+      await api.delete(`/admin/delete-user/${userId}`);
+      alert("User deleted ✅");
+      refreshUsers();
+    } catch (err) {
+      alert("Failed to delete user ❌");
+    }
+  };
+
+  const refreshUsers = async () => {
+    try {
+      const res = await api.get("/admin/users");
+      setUsers(res.data || []);
+    } catch {
+      setUsers([]);
     }
   };
 
@@ -140,7 +168,7 @@ export default function Admin() {
         <h2 className="text-xl font-semibold mb-3">Payment Control</h2>
         <div className="space-y-3">
           {users.map((u) => (
-            <div key={u._id} className="flex justify-between p-3 bg-white rounded shadow">
+            <div key={u._id} className="flex justify-between items-center p-3 bg-white rounded shadow">
               <span>{u.name || u.email}</span>
               <span>
                 {u.isVerified ? (
@@ -158,6 +186,33 @@ export default function Admin() {
           ))}
         </div>
       </section>
+
+      {/* 🔥 Master Controls */}
+      <section>
+        <h2 className="text-xl font-semibold mb-3 text-red-600">Master Controls</h2>
+        <div className="space-y-3">
+          {users.map((u) => (
+            <div key={u._id} className="flex justify-between items-center p-3 bg-white rounded shadow">
+              <span>{u.name || u.email}</span>
+              <div className="space-x-2">
+                <button
+                  onClick={() => handleSuspendUser(u._id)}
+                  className="px-3 py-1 bg-orange-500 text-white rounded"
+                >
+                  Suspend
+                </button>
+                <button
+                  onClick={() => handleDeleteUser(u._id)}
+                  className="px-3 py-1 bg-red-600 text-white rounded"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }
+
