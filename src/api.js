@@ -1,7 +1,8 @@
 import axios from "axios";
 
+// Always include /api so calls match your backend routes
 const BASE =
-  process.env.REACT_APP_BACKEND_URL || "https://bava.onrender.com";
+  process.env.REACT_APP_BACKEND_URL || "https://bava.onrender.com/api";
 
 const api = axios.create({
   baseURL: BASE,
@@ -11,8 +12,11 @@ const api = axios.create({
 // Attach token if present
 api.interceptors.request.use((cfg) => {
   const token = localStorage.getItem("token");
-  if (token) cfg.headers.Authorization = `Bearer ${token}`;
+  if (token) {
+    cfg.headers.Authorization = `Bearer ${token}`;
+  }
   return cfg;
 });
 
 export default api;
+
