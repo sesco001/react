@@ -1,38 +1,56 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import api from "../api";
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Categories() {
-  const [departments, setDepartments] = useState([]);
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    // try to fetch departments from backend; fallback to static
-    api.get("/departments").then((res) => {
-      setDepartments(res.data || [
-        { id: "engineering", name: "Engineering" },
-        { id: "business", name: "Business & Economics" },
-        { id: "arts", name: "Arts & Social Sciences" }
-      ]);
-    }).catch(() => {
-      setDepartments([
-        { id: "engineering", name: "Engineering" },
-        { id: "business", name: "Business & Economics" },
-        { id: "arts", name: "Arts & Social Sciences" }
-      ]);
-    });
-  }, []);
+  const handleEarnClick = () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login"); // require login
+    } else {
+      navigate("/earn");
+    }
+  };
+
+  const categories = [
+    {
+      id: "learn",
+      name: "📚 Learn",
+      description:
+        "Access unlimited AI-powered academic resources, Humaniser, No Limit AI, and department-based study materials.",
+    },
+    {
+      id: "earn",
+      name: "💸 Earn",
+      description:
+        "Get paid for solving assignments (local & international) and earn referral bonuses when you invite others.",
+    },
+  ];
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">Departments</h1>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {departments.map((d) => (
-          <Link to={`/category/${d.id}`} key={d.id}>
-            <div className="p-6 bg-white rounded shadow hover:shadow-lg transition">
-              <h3 className="text-xl font-semibold">{d.name}</h3>
+      <h1 className="text-2xl font-bold mb-6">Choose Your Category</h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {categories.map((c) =>
+          c.id === "earn" ? (
+            <div
+              key={c.id}
+              onClick={handleEarnClick}
+              className="p-6 bg-white rounded shadow hover:shadow-lg transition cursor-pointer"
+            >
+              <h3 className="text-xl font-semibold mb-2">{c.name}</h3>
+              <p className="text-gray-700">{c.description}</p>
             </div>
-          </Link>
-        ))}
+          ) : (
+            <Link to={`/${c.id}`} key={c.id}>
+              <div className="p-6 bg-white rounded shadow hover:shadow-lg transition">
+                <h3 className="text-xl font-semibold mb-2">{c.name}</h3>
+                <p className="text-gray-700">{c.description}</p>
+              </div>
+            </Link>
+          )
+        )}
       </div>
     </div>
   );
