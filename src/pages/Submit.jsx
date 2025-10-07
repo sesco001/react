@@ -1,27 +1,37 @@
 import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import api from "../api";
-import { useNavigate } from "react-router-dom";
 
 export default function Submit() {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
+
   const [title, setTitle] = useState("");
   const [department, setDepartment] = useState("engineering");
   const [description, setDescription] = useState("");
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  // 🚫 If not logged in, block access
   if (!token) {
     return (
-      <div className="p-6 bg-white rounded shadow">
-        <p>Please <a className="text-indigo-600" href="/login">login</a> to submit an assignment.</p>
+      <div className="max-w-lg mx-auto p-6 bg-white rounded shadow text-center">
+        <p className="mb-2">⚠️ You must be logged in to submit an assignment.</p>
+        <Link
+          to="/login"
+          className="inline-block mt-2 bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
+        >
+          Login
+        </Link>
       </div>
     );
   }
 
+  // ✅ Handle Submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+
     try {
       const form = new FormData();
       form.append("title", title);
@@ -29,31 +39,46 @@ export default function Submit() {
       form.append("description", description);
       if (file) form.append("file", file);
 
-      const res = await api.post("/submit", form, {
-        headers: { "Content-Type": "multipart/form-data" }
+      const res = await api.post("/assignments/submit", form, {
+        headers: { 
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`
+        }
       });
 
-      alert(res.data.message || "Submitted!");
+      alert(res.data.message || "Assignment submitted successfully!");
       navigate("/");
     } catch (err) {
       console.error(err);
-      alert("Submission failed");
+      alert("❌ Submission failed. Please try again.");
     }
+
     setLoading(false);
   };
 
   return (
-    <div className="max-w-2xl bg-white p-6 rounded shadow">
-      <h2 className="text-xl font-semibold mb-4">Submit Assignment</h2>
+    <div className="max-w-2xl mx-auto bg-white p-6 rounded shadow">
+      <h2 className="text-xl font-semibold mb-4">📤 Submit Assignment</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
+        
         <div>
           <label className="block text-sm font-medium">Title</label>
-          <input value={title} onChange={(e) => setTitle(e.target.value)} className="w-full border p-2 rounded" />
+          <input
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="w-full border p-2 rounded focus:ring focus:ring-indigo-200"
+            required
+          />
         </div>
 
         <div>
           <label className="block text-sm font-medium">Department</label>
-          <select value={department} onChange={(e) => setDepartment(e.target.value)} className="w-full border p-2 rounded">
+          <select
+            value={department}
+            onChange={(e) => setDepartment(e.target.value)}
+            className="w-full border p-2 rounded focus:ring focus:ring-indigo-200"
+          >
             <option value="engineering">Engineering</option>
             <option value="business">Business</option>
             <option value="arts">Arts</option>
@@ -62,16 +87,29 @@ export default function Submit() {
 
         <div>
           <label className="block text-sm font-medium">Description</label>
-          <textarea value={description} onChange={(e) => setDescription(e.target.value)} className="w-full border p-2 rounded" />
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className="w-full border p-2 rounded focus:ring focus:ring-indigo-200"
+            rows="3"
+          />
         </div>
 
         <div>
           <label className="block text-sm font-medium">File (optional)</label>
-          <input type="file" onChange={(e) => setFile(e.target.files[0])} />
+          <input
+            type="file"
+            onChange={(e) => setFile(e.target.files[0])}
+            className="w-full border p-2 rounded"
+          />
         </div>
 
         <div>
-          <button type="submit" className="bg-indigo-600 text-white px-4 py-2 rounded" disabled={loading}>
+          <button
+            type="submit"
+            className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
+            disabled={loading}
+          >
             {loading ? "Submitting..." : "Submit Assignment"}
           </button>
         </div>
@@ -79,3 +117,4 @@ export default function Submit() {
     </div>
   );
 }
+
