@@ -39,6 +39,7 @@ export default function CategoryPage() {
     education: [
       { name: "Khan Academy", description: "Free learning resources", url: "https://khanacademy.org" },
       { name: "Coursera", description: "University courses online", url: "https://coursera.org" },
+ { name: "Dictionary/Kamusi", description: "Search a word,Listen pronunciation and Translate", url: "https://makamesco-kamusi-sandy.vercel.app/" },
       { name: "Humaniser", description: "Simplify AI text for learning", url: process.env.REACT_APP_HUMANISER_URL || "https://humaniser-11.vercel.app/" }
     ],
     agriculture: [
