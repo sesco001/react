@@ -44,19 +44,35 @@ export default function Learn() {
       </section>
 
       {/* Kamusi / Dictionary */}
-      <section className="p-6 bg-white rounded-lg shadow space-y-3">
-        <h2 className="text-2xl font-semibold">📖 Kamusi / Dictionary</h2>
-        <p>
-          Your multipurpose tool — translate words, get meanings, hear pronunciations,
-          and access a powerful dictionary. Everything you need in one place.
-        </p>
-        <Link
-          to="/kamusi"
-          className="inline-block bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
-        >
-          Open Kamusi
-        </Link>
-      </section>
+<section className="p-6 bg-white rounded-lg shadow space-y-3">
+  <h2 className="text-2xl font-semibold">📖 Kamusi / Dictionary</h2>
+  <p>
+    Your multipurpose tool — translate words, get meanings, hear pronunciations,
+    and access a powerful dictionary. Everything you need in one place.
+  </p>
+  <Link
+    to="#"
+    onClick={(e) => {
+      e.preventDefault(); // prevent normal navigation
+      if (!navigator.onLine) {
+        // ❌ User is offline
+        alert("You are offline! Please connect to the internet to open Kamusi.");
+        // If using toast: toast.error("You are offline!");
+      } else {
+        // ✅ User is online
+        window.open(
+          "https://makamesco-kamusi-sandy.vercel.app/",
+          "_blank",
+          "noopener,noreferrer"
+        );
+      }
+    }}
+    className="inline-block bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
+  >
+    Open Kamusi
+  </Link>
+</section>
+
 
       {/* Experts Option */}
       <section className="p-6 bg-white rounded-lg shadow space-y-3">
