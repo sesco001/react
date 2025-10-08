@@ -14,19 +14,33 @@ export default function Learn() {
       </section>
 
       {/* Humaniser */}
-      <section className="p-6 bg-white rounded-lg shadow space-y-3">
-        <h2 className="text-2xl font-semibold">📝 Humaniser</h2>
-        <p>
-          Tired of AI-generated text sounding robotic? Use our Humaniser to transform
-          any AI content into natural, human-like writing that passes any test.
-        </p>
-        <Link
-          to="/humaniser"
-          className="inline-block bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
-        >
-          Try Humaniser
-        </Link>
-      </section>
+<section className="p-6 bg-white rounded-lg shadow space-y-3">
+  <h2 className="text-2xl font-semibold">📝 Humaniser</h2>
+  <p>
+    Tired of AI-generated text sounding robotic? Use our Humaniser to transform
+    any AI content into natural, human-like writing that passes any test.
+  </p>
+  <Link
+    to="#"
+    onClick={(e) => {
+      e.preventDefault(); // stop internal routing
+      if (!navigator.onLine) {
+        alert("⚠️ You are offline! Please connect to the internet to try Humaniser.");
+        // Or use toast.error("You are offline!");
+      } else {
+        window.open(
+          "https://humaniser-11.vercel.app/",
+          "_blank",
+          "noopener,noreferrer"
+        );
+      }
+    }}
+    className="inline-block bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
+  >
+    Try Humaniser
+  </Link>
+</section>
+
 
       {/* AI Assistant */}
       <section className="p-6 bg-white rounded-lg shadow space-y-3">
