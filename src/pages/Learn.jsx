@@ -42,20 +42,34 @@ export default function Learn() {
 </section>
 
 
-      {/* AI Assistant */}
-      <section className="p-6 bg-white rounded-lg shadow space-y-3">
-        <h2 className="text-2xl font-semibold">🤖 AI Assistant</h2>
-        <p>
-          Ask our AI anything — from essays, research, coding, or explanations. It
-          responds perfectly to every task, saving you hours of stress.
-        </p>
-        <Link
-          to="/ai"
-          className="inline-block bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
-        >
-          Use AI Assistant
-        </Link>
-      </section>
+    {/* AI Assistant */}
+<section className="p-6 bg-white rounded-lg shadow space-y-3">
+  <h2 className="text-2xl font-semibold">🤖 AI Assistant</h2>
+  <p>
+    Ask our AI anything — from essays, research, coding, or explanations. It
+    responds perfectly to every task, saving you hours of stress.
+  </p>
+  <Link
+    to="#"
+    onClick={(e) => {
+      e.preventDefault(); // prevent internal navigation
+      if (!navigator.onLine) {
+        alert("⚠️ You are offline! Connect to the internet to use AI Assistant.");
+        // Or use toast.error("You are offline!");
+      } else {
+        window.open(
+          "https://maka-ai-eight.vercel.app/",
+          "_blank",
+          "noopener,noreferrer"
+        );
+      }
+    }}
+    className="inline-block bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
+  >
+    Use AI Assistant
+  </Link>
+</section>
+
 
       {/* Kamusi / Dictionary */}
 <section className="p-6 bg-white rounded-lg shadow space-y-3">
