@@ -2,20 +2,19 @@ import React, { useState, useEffect } from "react";
 import api from "../api";
 import { useNavigate } from "react-router-dom";
 
-const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL || "marcasmatheka@gmail.com";
-
 export default function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Auto-redirect if already logged in
+  // Redirect if already logged in
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user") || "null");
-    if (user && user.token) {
-      const isAdmin = user.role === "admin" || user.email === ADMIN_EMAIL;
-      navigate(isAdmin ? "/admin" : "/");
+    const saved = localStorage.getItem("user");
+    if (saved) {
+      const user = JSON.parse(saved);
+      if (user?.role === "admin") navigate("/admin");
+      else navigate("/");
     }
   }, [navigate]);
 
@@ -30,23 +29,13 @@ export default function Login() {
 
       if (!data || !data.token) throw new Error("Invalid login response");
 
-      // If backend didn't set role, detect admin via email
-      const userRole =
-        data.role || (data.email === ADMIN_EMAIL ? "admin" : "student");
+      // ✅ Save both user + token separately
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data));
 
-      const userData = {
-        ...data,
-        role: userRole,
-      };
-
-      localStorage.setItem("user", JSON.stringify(userData));
-
-      // Redirect based on detected role
-      if (userRole === "admin") {
-        navigate("/admin");
-      } else {
-        navigate("/");
-      }
+      // ✅ Redirect based on role
+      if (data.role === "admin") navigate("/admin");
+      else navigate("/");
     } catch (err) {
       const msg =
         err.response?.data?.error ||
