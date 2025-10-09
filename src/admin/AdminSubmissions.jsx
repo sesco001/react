@@ -1,86 +1,58 @@
-// src/admin/AdminSubmissions.jsx
-import React, { useEffect, useState } from "react";
-import api from "../api";
+import { useEffect, useState } from "react";
+
+const API_BASE = import.meta.env.VITE_API_URL || "https://bava.onrender.com/api";
 
 export default function AdminSubmissions() {
-  const [subs, setSubs] = useState([]);
-  const [loading, setLoading] = useState(false);
-
-  const fetchSubs = async () => {
-    setLoading(true);
-    try {
-      const res = await api.get("/admin/submissions");
-      setSubs(res.data || []);
-    } catch (err) {
-      console.error(err);
-      alert("Failed to fetch submissions");
-    }
-    setLoading(false);
-  };
+  const [submissions, setSubmissions] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchSubs();
+    const fetchSubmissions = async () => {
+      try {
+        console.log("Fetching:", `${API_BASE}/admin/submissions`);
+        const res = await fetch(`${API_BASE}/admin/submissions`);
+        if (!res.ok) throw new Error("Failed to fetch submissions");
+        const data = await res.json();
+        setSubmissions(data);
+      } catch (err) {
+        console.error("❌ Error fetching submissions:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchSubmissions();
   }, []);
 
-  const updateStatus = async (id, status) => {
-    try {
-      await api.post(`/admin/submission-status/${id}`, { status });
-      alert("Status updated");
-      fetchSubs();
-    } catch (err) {
-      console.error(err);
-      alert("Failed to update status");
-    }
-  };
-
-  const viewSubmission = (s) => {
-    // open link if present else show content
-    if (s.link) window.open(s.link, "_blank");
-    else alert(s.description || "No additional content");
-  };
+  if (loading) return <p>Loading submissions...</p>;
 
   return (
-    <div>
-      <h2 className="text-2xl font-bold mb-4">User Submissions</h2>
-
-      {loading ? (
-        <p>Loading submissions…</p>
+    <div className="p-6">
+      <h2 className="text-xl font-semibold mb-4">📤 Student Submissions</h2>
+      {submissions.length === 0 ? (
+        <p>No submissions found.</p>
       ) : (
-        <div className="space-y-4">
-          {subs.length === 0 && <p>No submissions found.</p>}
-          {subs.map((s) => (
-            <div key={s._id} className="p-4 bg-white rounded shadow">
-              <div className="flex justify-between items-start">
-                <div>
-                  <h3 className="font-semibold">{s.title}</h3>
-                  <div className="text-sm text-gray-600">By: {s.userEmail || s.user?.email}</div>
-                  <div className="text-sm text-gray-600">Dept: {s.department}</div>
-                </div>
-                <div className="space-x-2">
-                  <button onClick={() => viewSubmission(s)} className="px-3 py-1 bg-indigo-600 text-white rounded">
-                    View
-                  </button>
-                  <span className="px-3 py-1 bg-yellow-100 rounded">{s.status || "pending"}</span>
-                </div>
-              </div>
-
-              <p className="mt-3 text-sm text-gray-700">{s.description?.slice(0, 300)}</p>
-
-              <div className="mt-3 flex gap-2">
-                <button onClick={() => updateStatus(s._id, "in-progress")} className="px-3 py-1 bg-blue-500 text-white rounded">
-                  In progress
-                </button>
-                <button onClick={() => updateStatus(s._id, "completed")} className="px-3 py-1 bg-green-600 text-white rounded">
-                  Mark complete
-                </button>
-                <button onClick={() => updateStatus(s._id, "rejected")} className="px-3 py-1 bg-red-600 text-white rounded">
-                  Reject
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
+        <table className="w-full border">
+          <thead>
+            <tr className="bg-gray-200">
+              <th className="p-2 text-left">User Email</th>
+              <th className="p-2 text-left">Title</th>
+              <th className="p-2 text-left">Status</th>
+              <th className="p-2 text-left">Submitted</th>
+            </tr>
+          </thead>
+          <tbody>
+            {submissions.map((s) => (
+              <tr key={s._id} className="border-t">
+                <td className="p-2">{s.userEmail}</td>
+                <td className="p-2">{s.title}</td>
+                <td className="p-2 capitalize">{s.status}</td>
+                <td className="p-2">{new Date(s.createdAt).toLocaleString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       )}
     </div>
   );
 }
+
