@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const API_BASE = import.meta.env.VITE_API_URL || "https://bava.onrender.com/api";
+const API_BASE = import.meta.env.REACT_APP_BACKEND_URL || "https://bava.onrender.com/api";
 
 export default function AdminSubmissions() {
   const [submissions, setSubmissions] = useState([]);
