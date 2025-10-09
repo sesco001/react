@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
-// Use CRA-compatible environment variable
-const API_BASE = process.env.REACT_APP_BACKEND_URL || "https://bava.onrender.com/api";
+// ✅ Correct way for Vite
+const API_BASE = import.meta.env.VITE_API_URL || "https://bava.onrender.com/api";
 
 export default function AdminSubmissions() {
   const [submissions, setSubmissions] = useState([]);
@@ -10,7 +10,7 @@ export default function AdminSubmissions() {
   useEffect(() => {
     const fetchSubmissions = async () => {
       try {
-        console.log("Fetching:", `${API_BASE}/admin/submissions`);
+        console.log("🌐 Fetching from:", `${API_BASE}/admin/submissions`);
         const res = await fetch(`${API_BASE}/admin/submissions`);
         if (!res.ok) throw new Error("Failed to fetch submissions");
         const data = await res.json();
