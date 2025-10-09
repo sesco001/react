@@ -1,51 +1,52 @@
 import { useEffect, useState } from "react";
 
-// Use CRA-compatible env variable
-const API_BASE = process.env.REACT_APP_BACKEND_URL || "https://bava.onrender.com/api";
+const API_BASE = import.meta.env.VITE_API_URL || "https://bava.onrender.com/api";
 
-export default function AdminAssignments() {
-  const [assignments, setAssignments] = useState([]);
+export default function AdminSubmissions() {
+  const [submissions, setSubmissions] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchAssignments = async () => {
+    const fetchSubmissions = async () => {
       try {
-        console.log("Fetching:", `${API_BASE}/admin/assignments`);
-        const res = await fetch(`${API_BASE}/admin/assignments`);
-        if (!res.ok) throw new Error("Failed to fetch assignments");
+        console.log("🌐 Fetching from:", `${API_BASE}/admin/submissions`);
+        const res = await fetch(`${API_BASE}/admin/submissions`);
+        if (!res.ok) throw new Error("Failed to fetch submissions");
         const data = await res.json();
-        setAssignments(data);
+        setSubmissions(data);
       } catch (err) {
-        console.error("❌ Error fetching assignments:", err);
+        console.error("❌ Error fetching submissions:", err);
       } finally {
         setLoading(false);
       }
     };
-    fetchAssignments();
+    fetchSubmissions();
   }, []);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <p>Loading submissions...</p>;
 
   return (
     <div className="p-6">
-      <h2 className="text-xl font-semibold mb-4">📚 All Assignments</h2>
-      {assignments.length === 0 ? (
-        <p>No assignments found.</p>
+      <h2 className="text-xl font-semibold mb-4">📤 Student Submissions</h2>
+      {submissions.length === 0 ? (
+        <p>No submissions found.</p>
       ) : (
         <table className="w-full border">
           <thead>
             <tr className="bg-gray-200">
+              <th className="p-2 text-left">User Email</th>
               <th className="p-2 text-left">Title</th>
               <th className="p-2 text-left">Status</th>
-              <th className="p-2 text-left">Created</th>
+              <th className="p-2 text-left">Submitted</th>
             </tr>
           </thead>
           <tbody>
-            {assignments.map((a) => (
-              <tr key={a._id} className="border-t">
-                <td className="p-2">{a.title}</td>
-                <td className="p-2 capitalize">{a.status}</td>
-                <td className="p-2">{new Date(a.createdAt).toLocaleDateString()}</td>
+            {submissions.map((s) => (
+              <tr key={s._id} className="border-t">
+                <td className="p-2">{s.userEmail}</td>
+                <td className="p-2">{s.title}</td>
+                <td className="p-2 capitalize">{s.status}</td>
+                <td className="p-2">{new Date(s.createdAt).toLocaleString()}</td>
               </tr>
             ))}
           </tbody>
