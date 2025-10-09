@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
-const API_BASE = import.meta.env.REACT_APP_BACKEND_URL || "https://bava.onrender.com/api";
+// Use CRA-compatible environment variable
+const API_BASE = process.env.REACT_APP_BACKEND_URL || "https://bava.onrender.com/api";
 
 export default function AdminSubmissions() {
   const [submissions, setSubmissions] = useState([]);
@@ -55,4 +56,3 @@ export default function AdminSubmissions() {
     </div>
   );
 }
-
