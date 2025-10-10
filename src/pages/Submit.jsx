@@ -1,6 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 import api from "../api";
+import { io } from "socket.io-client";
+
+// Connect to backend Socket.IO server
+const socket = io("https://your-backend-url.com"); // replace with your backend URL
 
 export default function Submit() {
   const navigate = useNavigate();
@@ -12,7 +18,7 @@ export default function Submit() {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // 🚫 If not logged in, block access
+  // Block access if not logged in
   if (!token) {
     return (
       <div className="max-w-lg mx-auto p-6 bg-white rounded shadow text-center">
@@ -27,7 +33,7 @@ export default function Submit() {
     );
   }
 
-  // ✅ Handle Submit
+  // Handle submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -46,11 +52,24 @@ export default function Submit() {
         }
       });
 
-      alert(res.data.message || "Assignment submitted successfully!");
-      navigate("/");
+      // Show toast notification
+      toast.success(res.data.message || "Assignment submitted successfully!");
+
+      // Emit real-time notification to admin
+      socket.emit("new_submission", {
+        title,
+        user: token, // or get user's name if you store it
+        timestamp: new Date(),
+      });
+
+      // Redirect after short delay to let toast show
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
+
     } catch (err) {
       console.error(err);
-      alert("❌ Submission failed. Please try again.");
+      toast.error("❌ Submission failed. Please try again.");
     }
 
     setLoading(false);
@@ -58,9 +77,9 @@ export default function Submit() {
 
   return (
     <div className="max-w-2xl mx-auto bg-white p-6 rounded shadow">
+      <ToastContainer position="top-right" autoClose={3000} />
       <h2 className="text-xl font-semibold mb-4">📤 Submit Assignment</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
-        
         <div>
           <label className="block text-sm font-medium">Title</label>
           <input
@@ -117,4 +136,3 @@ export default function Submit() {
     </div>
   );
 }
-
