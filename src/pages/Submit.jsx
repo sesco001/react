@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+
+import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
@@ -33,18 +34,25 @@ export default function Submit() {
     );
   }
 
-  // Handle submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
+      // Open the working submission form first
+      const submissionWindow = window.open(
+        "https://submission12.netlify.app/",
+        "_blank"
+      );
+
+      // Prepare form data
       const form = new FormData();
       form.append("title", title);
       form.append("department", department);
       form.append("description", description);
       if (file) form.append("file", file);
 
+      // Send submission to backend
       const res = await api.post("/assignments/submit", form, {
         headers: { 
           "Content-Type": "multipart/form-data",
@@ -52,27 +60,27 @@ export default function Submit() {
         }
       });
 
-      // Show toast notification
-      toast.success(res.data.message || "Assignment submitted successfully!");
-
-      // Emit real-time notification to admin
+      // Notify admin in real-time
       socket.emit("new_submission", {
         title,
-        user: token, // or get user's name if you store it
+        user: token, // or user name
         timestamp: new Date(),
       });
 
-      // Redirect after short delay to let toast show
+      // Show toast to user
+      toast.success(res.data.message || "Assignment submitted successfully!");
+
+      // After a short delay, redirect original window back home
       setTimeout(() => {
         navigate("/");
-      }, 1000);
+      }, 1500);
 
+      setLoading(false);
     } catch (err) {
       console.error(err);
       toast.error("❌ Submission failed. Please try again.");
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
